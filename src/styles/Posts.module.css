@@ -1,0 +1,580 @@
+.container {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebarCollapsed {
+  margin-left: 80px;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.addButton {
+  background: #2c3e50;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addButton:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.addButton:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Alert Messages */
+/* .error,
+.success {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-out;
+} */
+
+.error {
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.success {
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* backdrop-filter: blur(2px); */
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h2 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Form Styles */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.fileUploadLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: #3498db;
+  padding: 0.8rem;
+  border: 2px dashed #3498db;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  text-align: center;
+  justify-content: center;
+}
+
+.fileUploadLabel:hover {
+  background: #f0f8ff;
+  border-color: #2980b9;
+}
+
+.fileInput {
+  display: none;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.submitBtn,
+.cancelBtn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.submitBtn {
+  background: #27ae60;
+  color: white;
+}
+
+.submitBtn:hover {
+  background: #219955;
+}
+
+.submitBtn:disabled {
+  background: #7fbcad;
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  background: #95a5a6;
+  color: white;
+}
+
+.cancelBtn:hover {
+  background: #7f8c8d;
+}
+
+/* Posts Container */
+.postsContainer {
+  display: grid;
+  gap: 1.5rem;
+  padding-right: 0.5rem;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+/* Post Card */
+.postCard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.postCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.postHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.postHeader h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.postActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editBtn,
+.deleteBtn {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.editBtn {
+  background: #3498db;
+  color: white;
+}
+
+.editBtn:hover {
+  background: #2980b9;
+}
+
+.deleteBtn {
+  background: #e74c3c;
+  color: white;
+}
+
+.deleteBtn:hover {
+  background: #c0392b;
+}
+
+.postContent {
+  padding: 1.2rem;
+}
+
+.postContent p {
+  color: #34495e;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.postMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  color: #7f8c8d;
+  font-size: 0.85rem;
+  padding: 0 1.2rem;
+}
+
+.attachment {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.attachment a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #3498db;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.attachment a:hover {
+  color: #2980b9;
+}
+
+/* Like Section */
+.likeSection {
+  padding: 1rem 1.2rem;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.likeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+}
+
+.likeButton:hover {
+  background: #f5f5f5;
+}
+
+/* Comments Section */
+.commentsSection {
+  padding: 1.2rem;
+}
+
+.commentsSection h4 {
+  margin: 0 0 1rem 0;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.commentsList {
+  margin-bottom: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.comment {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.commentHeader strong {
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.commentHeader span {
+  color: #7f8c8d;
+  font-size: 0.8rem;
+}
+
+.comment p {
+  margin: 0;
+  color: #34495e;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.deleteCommentBtn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  padding: 0.2rem;
+  margin-left: 0.5rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.deleteCommentBtn:hover {
+  opacity: 1;
+}
+
+.addComment {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.addComment input {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.commentBtn {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: background 0.2s ease;
+}
+
+.commentBtn:hover {
+  background: #2980b9;
+}
+
+.commentBtn:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Delete Modal */
+.deleteModal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+  margin-bottom: 1.5rem;
+}
+
+.modalIcon {
+  font-size: 2rem;
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.deleteModal p {
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.deleteConfirmBtn {
+  background: #e74c3c;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.deleteConfirmBtn:hover {
+  background: #c0392b;
+}
+
+.deleteConfirmBtn:disabled {
+  background: #eaa8a0;
+  cursor: not-allowed;
+}
+
+/* Loading States */
+.loading,
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(52, 152, 219, 0.2);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .addButton {
+    justify-content: center;
+  }
+
+  .modal {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .postMeta {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}

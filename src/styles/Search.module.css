@@ -1,0 +1,233 @@
+/* الأساسيات المشتركة */
+.searchContainer {
+  display: flex;
+  align-items: center;
+  background: var(--secondary-dark);
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchContainer input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #000;
+  font-size: 1rem;
+  padding: 0.5rem;
+  outline: none;
+  min-width: 0; /* يمنع التجاوز في الشاشات الصغيرة */
+}
+
+.searchContainer input::placeholder {
+  color: var(--text-muted);
+}
+
+.searchButton {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap; /* يمنع كسر النص في الأزرار */
+}
+
+/* أنماط المودال */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: var(--primary-dark);
+  padding: 1.5rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  margin: 1rem;
+}
+
+/* أنماط الصفحة الكاملة */
+.searchPage {
+  padding: 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pageContent {
+  background: transparent;
+  padding: 0;
+  width: auto;
+  max-width: none;
+  box-shadow: none;
+}
+
+/* التبويبات */
+.tabs {
+  display: flex;
+  margin: 1.5rem 0 1rem;
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 5px;
+}
+
+.tabs button {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.activeTab {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+/* نتائج البحث */
+.searchResults {
+  margin-top: 1rem;
+}
+
+.resultCard {
+  display: flex;
+  align-items: center;
+  background: var(--secondary-dark);
+  border-radius: 8px;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.resultCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.resultIcon {
+  font-size: 1.3rem;
+  margin-right: 0.8rem;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.resultContent h3 {
+  margin: 0;
+  color: var(--text-light);
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.noResults {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 1.5rem;
+}
+
+/* التحميل */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.spinner {
+  border: 3px solid var(--primary-color);
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* تحسينات للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .searchContainer {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .searchButton {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .resultCard {
+    padding: 0.7rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .resultIcon {
+    font-size: 1.2rem;
+    margin-right: 0.7rem;
+  }
+
+  .resultContent h3 {
+    font-size: 0.9rem;
+  }
+
+  .tabs button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchContainer {
+    flex-direction: row; /* نبقيه في سطر واحد مع تحسينات أخرى */
+    padding: 0.3rem 0.6rem;
+  }
+
+  .searchContainer input {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+  }
+
+  .searchButton {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .modalContent {
+    padding: 1rem;
+    width: 95%;
+  }
+
+  .resultCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resultIcon {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}

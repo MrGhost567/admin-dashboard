@@ -1,0 +1,101 @@
+/* src/styles/DashboardCard.module.css */
+.card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  min-height: 120px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.iconWrapper {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #3498db;
+  transition: color 0.3s ease;
+}
+
+.card:hover .iconWrapper {
+  color: #2980b9;
+}
+
+.cardTitle {
+  color: #636e72;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.cardValue {
+  color: #2d3436;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.errorValue {
+  color: #e74c3c;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.loadingPulse {
+  width: 60px;
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+    min-height: 110px;
+  }
+  .iconWrapper {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 0.75rem;
+    min-height: 100px;
+  }
+  .cardValue {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 424px) {
+  .card {
+    padding: 0.5rem;
+    min-height: 90px;
+  }
+  .cardTitle {
+    font-size: 0.8rem;
+  }
+}

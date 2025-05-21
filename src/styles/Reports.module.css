@@ -1,0 +1,591 @@
+/* Main Container Styles */
+.adminContainer {
+  padding: 2rem;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  color: #334155;
+}
+
+.pageTitle {
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  text-align: right;
+  font-weight: 600;
+}
+
+/* Error Alert */
+.errorAlert {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #dc2626;
+  font-size: 0.95rem;
+}
+
+.errorAlert button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #991b1b;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Filter Controls */
+.filterControls {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: right;
+}
+
+.filterControls button {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 0.9rem;
+}
+
+.filterControls button:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filterControls .activeFilter {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #64748b;
+}
+
+.spinner {
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* Reports Table Container */
+.reportsTableContainer {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.reportsTableContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.reportsTableContainer::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.reportsTableContainer::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+.reportsTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.reportsTable th {
+  background-color: #f8fafc;
+  color: #334155;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-size: 0.9rem;
+}
+
+.reportsTable td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  color: #475569;
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+
+.reportsTable tr:hover td {
+  background-color: #f8fafc;
+}
+
+/* Report Text - Improved for multi-line text */
+.reportText {
+  /* الخصائص الأساسية */
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  line-height: 1.5;
+
+  /* دعم متعدد للمتصفحات */
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+
+  -webkit-line-clamp: 3;
+  -moz-line-clamp: 3;
+  line-clamp: 3;
+
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+
+  /* Fallback للمتصفحات القديمة */
+  max-height: 4.5em;
+  transition: max-height 0.3s ease;
+}
+
+/* زر عرض المزيد/إخفاء */
+.readMoreBtn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.25rem 0;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.readMoreBtn:hover {
+  text-decoration: underline;
+}
+
+.reportText.expanded {
+  -webkit-line-clamp: unset;
+  -moz-line-clamp: unset;
+  line-clamp: unset;
+  max-height: none;
+  display: block;
+}
+/* Status Badges */
+.status {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.pending {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+
+.reviewed {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+/* Validity Badges */
+.validity {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.valid {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.invalid {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.notReviewed {
+  color: #64748b;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.validateButton {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.validateButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #1e293b;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color 0.2s ease;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  color: #64748b;
+}
+
+.modalContent {
+  padding: 1.5rem;
+}
+
+/* Report Preview */
+.reportPreview {
+  margin-bottom: 1.5rem;
+}
+
+.reportPreview h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: #334155;
+  font-size: 1rem;
+}
+
+.reportPreview .reportText {
+  background-color: #f8fafc;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 3px solid #e2e8f0;
+  white-space: pre-wrap;
+  max-width: 100%;
+  line-height: 1.6;
+}
+
+/* Validation Section */
+.validationSection {
+  margin-top: 2rem;
+}
+
+.validationSection h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #334155;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.validationButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.validButton {
+  background-color: #10b981;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.validButton:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.invalidButton {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.invalidButton:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Read More/Less Button */
+.readMoreButton {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.25rem 0;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+.readMoreButton:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .adminContainer {
+    padding: 1rem;
+  }
+
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+
+  .reportsTableContainer {
+    border-radius: 8px;
+    max-height: 65vh;
+  }
+
+  .reportsTable {
+    display: block;
+  }
+
+  .reportsTable thead {
+    display: none;
+  }
+
+  .reportsTable tbody {
+    display: block;
+  }
+
+  .reportsTable tr {
+    display: block;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+  }
+
+  .reportsTable td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    text-align: right;
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+  }
+
+  .reportsTable td:last-child {
+    border-bottom: none;
+  }
+
+  .reportsTable td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #334155;
+    margin-right: 1rem;
+    text-align: left;
+    flex: 1;
+  }
+
+  .reportsTable td > *:not(::before) {
+    flex: 2;
+    text-align: right;
+  }
+
+  .reportText {
+    -webkit-line-clamp: 2;
+    -moz-line-clamp: 2;
+    line-clamp: 2;
+    max-height: 3em;
+  }
+
+  .status,
+  .validity {
+    padding: 0.3rem 0.6rem;
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+
+  .validateButton {
+    width: auto;
+    justify-content: center;
+  }
+
+  .modal {
+    width: 95%;
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterControls {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .filterControls::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterControls button {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .validationButtons {
+    flex-direction: row;
+  }
+
+  .validButton,
+  .invalidButton {
+    width: auto;
+    justify-content: center;
+    padding: 0.8rem 1rem;
+  }
+
+  .modalHeader {
+    padding: 1rem;
+  }
+
+  .modalContent {
+    padding: 1rem;
+  }
+}

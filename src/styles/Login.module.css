@@ -1,0 +1,204 @@
+/* src/styles/Login.module.css */
+
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
+  background-color: var(--primary-dark); /* Use primary-dark color */
+  font-family: "Arial", sans-serif;
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  overflow: hidden; /* Prevent scrollbars */
+  position: fixed; /* Fix the container to the viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.loginForm {
+  background: var(--secondary-dark); /* Use secondary-dark color */
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); /* Soft shadow */
+  width: 100%;
+  max-width: 400px;
+  backdrop-filter: blur(10px); /* Blur effect */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+}
+
+.loginForm h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--text-light); /* Use text-light color */
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted); /* Use text-muted color */
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent input background */
+  color: var(--text-light); /* Use text-light color */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.formGroup input:focus {
+  border-color: var(--text-light); /* Highlight border on focus */
+  outline: none;
+  box-shadow: 0 0 8px rgba(236, 240, 241, 0.3); /* Glow effect on focus */
+}
+
+.loginButton {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #3498db; /* Blue button */
+  color: var(--text-light); /* Use text-light color */
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.loginButton:hover {
+  background-color: #2980b9; /* Darker blue hover effect */
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.loginButton:active {
+  transform: translateY(0); /* Reset lift on click */
+}
+
+.error {
+  color: #e74c3c; /* Red error text */
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Optional: Add a subtle animation to the form */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loginForm {
+  animation: fadeIn 0.5s ease-in-out; /* Fade-in animation */
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.toggleButton:hover {
+  color: #3a7bc8;
+}
+
+/* Add some spacing between form groups */
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.error {
+  color: #ff4d4f;
+  margin-bottom: 15px;
+}
+
+.authButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.authButton:hover {
+  background-color: #3a7bc8;
+}
+
+.authButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.toggleAuth {
+  background: none;
+  border: none;
+  color: #4a90e2;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 14px;
+  text-decoration: underline;
+  width: 100%;
+  padding: 5px;
+}
+
+.toggleAuth:hover {
+  color: #3a7bc8;
+}
+
+.toggleAuth:disabled {
+  color: #cccccc;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: #ff4d4f;
+  background: #fff2f0;
+  padding: 8px 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #ffccc7;
+}

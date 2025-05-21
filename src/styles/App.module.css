@@ -1,0 +1,104 @@
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mainContent {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.contentArea {
+  flex: 1;
+  padding: 2rem;
+  background: #f5f6fa;
+  overflow-y: auto;
+}
+
+.dashboard {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.cardsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Cards Styles */
+.card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card.blue {
+  background: #e3f2fd;
+}
+.card.green {
+  background: #e8f5e9;
+}
+.card.red {
+  background: #ffebee;
+}
+.card.purple {
+  background: #f3e5f5;
+}
+
+.card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3436;
+}
+
+.card p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #636e72;
+}
+
+/* Table Styles */
+.tableContainer {
+  overflow-x: auto;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.dataTable th,
+.dataTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.dataTable th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.dataTable tr:hover {
+  background-color: #f5f6fa;
+}

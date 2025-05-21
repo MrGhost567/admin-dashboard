@@ -1,0 +1,227 @@
+/* src/styles/Dashboard.module.css */
+
+.dashboard {
+  padding: 1.5rem;
+  background-color: #f5f6fa;
+  min-height: 100vh; /* Ensure the dashboard takes full height */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Modern font stack */
+  margin-left: 0px; /* Default margin to accommodate the sidebar */
+  transition: margin-left 0.3s ease; /* Smooth transition for margin */
+}
+
+/* When sidebar is collapsed */
+.dashboard.sidebarCollapsed {
+  margin-left: 80px; /* Adjust margin for collapsed sidebar */
+}
+
+.dashboard h1 {
+  color: #2d3436;
+  margin-bottom: 1.5rem;
+  font-size: 2rem; /* Slightly larger for better emphasis */
+  font-weight: 600; /* Semi-bold for better hierarchy */
+  text-align: center; /* Center the heading */
+}
+
+.cardsContainer {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); /* Responsive grid */
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Add a subtle animation for card loading */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cardsContainer .card {
+  animation: fadeIn 0.5s ease-in-out; /* Apply fade-in animation */
+  display: flex;
+  flex-direction: column; /* Default vertical layout */
+  align-items: center;
+  text-align: center;
+}
+
+/* Horizontal layout when sidebar is collapsed */
+.dashboard.sidebarCollapsed .card {
+  flex-direction: row; /* Switch to horizontal layout */
+  align-items: center;
+  text-align: left;
+  justify-content: flex-start;
+  gap: 1rem; /* Add space between icon and content */
+}
+
+.dashboard.sidebarCollapsed .iconWrapper {
+  margin-bottom: 0; /* Remove margin for horizontal layout */
+}
+
+/* Media Queries for Responsiveness */
+
+/* Tablets and Small Screens */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard.sidebarCollapsed {
+    margin-left: 80px; /* No change in margin for collapsed state on mobile */
+  }
+
+  .dashboard h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cardsContainer {
+    gap: 1rem;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(200px, 1fr)
+    ); /* Smaller cards */
+  }
+
+  /* Make cards smaller on tablets */
+  .card {
+    padding: 0.75rem; /* Reduce padding */
+  }
+
+  .iconWrapper {
+    font-size: 1.25rem; /* Reduce icon size */
+    margin-bottom: 0.5rem; /* Adjust spacing */
+  }
+
+  .cardTitle {
+    font-size: 0.85rem; /* Reduce title font size */
+    margin-bottom: 0.25rem; /* Adjust spacing */
+  }
+
+  .cardValue {
+    font-size: 1rem; /* Reduce value font size */
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 0.75rem;
+  }
+
+  .dashboard.sidebarCollapsed {
+    margin-left: 80px; /* No change in margin for collapsed state on mobile */
+  }
+
+  .dashboard h1 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .cardsContainer {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(150px, 1fr)
+    ); /* Even smaller cards */
+    gap: 0.75rem;
+  }
+
+  /* Make cards even smaller on mobile */
+  .card {
+    padding: 0.5rem; /* Further reduce padding */
+  }
+
+  .iconWrapper {
+    font-size: 1rem; /* Further reduce icon size */
+    margin-bottom: 0.25rem; /* Adjust spacing */
+  }
+
+  .cardTitle {
+    font-size: 0.8rem; /* Further reduce title font size */
+    margin-bottom: 0.25rem; /* Adjust spacing */
+  }
+
+  .cardValue {
+    font-size: 0.9rem; /* Further reduce value font size */
+  }
+}
+
+/* Extra Small Devices (e.g., 424x856) */
+@media (max-width: 424px) {
+  .dashboard {
+    padding: 0.5rem;
+  }
+
+  .dashboard.sidebarCollapsed {
+    margin-left: 80px; /* No change in margin for collapsed state on mobile */
+  }
+
+  .dashboard h1 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cardsContainer {
+    grid-template-columns: 1fr; /* Single column on extra small devices */
+    gap: 0.5rem;
+  }
+
+  /* Make cards smallest on extra small devices */
+  .card {
+    padding: 0.4rem; /* Smallest padding */
+  }
+
+  .iconWrapper {
+    font-size: 0.9rem; /* Smallest icon size */
+    margin-bottom: 0.2rem; /* Adjust spacing */
+  }
+
+  .cardTitle {
+    font-size: 0.75rem; /* Smallest title font size */
+    margin-bottom: 0.2rem; /* Adjust spacing */
+  }
+
+  .cardValue {
+    font-size: 0.85rem; /* Smallest value font size */
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: #d32f2f;
+}
+
+.loadingBar {
+  height: 24px;
+  width: 80%;
+  background: #eee;
+  border-radius: 4px;
+  margin: 1rem auto;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
