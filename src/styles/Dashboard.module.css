@@ -225,3 +225,19 @@
     opacity: 0.6;
   }
 }
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #d32f2f;
+  background-color: #ffebee;
+  border-radius: 4px;
+}

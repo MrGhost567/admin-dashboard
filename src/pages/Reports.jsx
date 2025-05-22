@@ -10,35 +10,42 @@ import axios from "axios";
 import styles from "../styles/Reports.module.css";
 
 const ReportsAdmin = () => {
+  // State management for reports, loading, and error states
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // State for selected report and filters
   const [selectedReport, setSelectedReport] = useState(null);
   const [isValidFilter, setIsValidFilter] = useState("");
   const [filter, setFilter] = useState("");
+  
   const API_URL = "http://localhost:8000/api/v1/admin/reports";
 
+  /**
+   * Fetches reports from the backend with current filters
+   * @function fetchReports
+   * @async
+   */
   const fetchReports = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams();
+      // Prepare query parameters based on current filters
+      const params = {};
+      if (filter !== "") params.isReviewed = filter;
+      if (isValidFilter !== "") params.isValid = isValidFilter;
 
-      if (filter !== "") {
-        params.append("isReviewed", filter);
-      }
-
-      if (isValidFilter !== "") {
-        params.append("isValid", isValidFilter);
-      }
-
-      const response = await axios.get(`${API_URL}?${params.toString()}`, {
+      // Make API request
+      const response = await axios.get(API_URL, {
+        params,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
       });
 
-      setReports(response.data);
+      // Handle different response formats (array or object with data property)
+      setReports(Array.isArray(response.data) ? response.data : response.data.data || []);
     } catch (err) {
       console.error("Error fetching reports:", err);
       setError(err.response?.data?.message || "Failed to load reports");
@@ -47,39 +54,40 @@ const ReportsAdmin = () => {
     }
   }, [filter, isValidFilter]);
 
-  const handleValidation = useCallback(
-    async (reportId, isValid) => {
-      try {
-        await axios.put(
-          `${API_URL}/${reportId}`,
-          {
-            isValid,
-            isReviewed: true,
+  /**
+   * Handles report validation (mark as valid/invalid)
+   * @function handleValidation
+   * @async
+   * @param {string} reportId - ID of the report to validate
+   * @param {boolean} isValid - Whether the report is valid
+   */
+  const handleValidation = async (reportId, isValid) => {
+    try {
+      // Send validation request to backend
+      await axios.put(
+        `${API_URL}/${reportId}`,
+        {
+          isValid,
+          isReviewed: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-          }
-        );
-        fetchReports(); // استدعاء بدون معاملات لاستخدام القيم الحالية
-      } catch (err) {
-        console.error("Error validating report:", err);
-        setError(err.response?.data?.message || "Failed to validate report");
-      }
-    },
-    [fetchReports]
-  );
+        }
+      );
+      
+      // Refresh reports list after validation
+      fetchReports();
+      setSelectedReport(null);
+    } catch (err) {
+      console.error("Error validating report:", err);
+      setError(err.response?.data?.message || "Failed to validate report");
+    }
+  };
 
+  // Fetch reports when component mounts or filters change
   useEffect(() => {
-    console.log("Current filters:", { filter, isValidFilter });
-    console.log(
-      "API URL:",
-      `${API_URL}?${new URLSearchParams({
-        ...(filter !== "" && { isReviewed: filter }),
-        ...(isValidFilter !== "" && { isValid: isValidFilter }),
-      }).toString()}`
-    );
     fetchReports();
   }, [filter, isValidFilter, fetchReports]);
 
@@ -87,6 +95,7 @@ const ReportsAdmin = () => {
     <div className={styles.adminContainer}>
       <h1 className={styles.pageTitle}>Reports Management</h1>
 
+      {/* Error display */}
       {error && (
         <div className={styles.errorAlert}>
           <FiAlertTriangle /> {error}
@@ -94,6 +103,7 @@ const ReportsAdmin = () => {
         </div>
       )}
 
+      {/* Filter controls */}
       <div className={styles.filterControls}>
         <button
           className={
@@ -132,7 +142,7 @@ const ReportsAdmin = () => {
         <button
           className={isValidFilter === "true" ? styles.activeFilter : ""}
           onClick={() => {
-            setFilter("true"); // Only reviewed reports can be valid/invalid
+            setFilter("true");
             setIsValidFilter("true");
           }}
         >
@@ -142,7 +152,7 @@ const ReportsAdmin = () => {
         <button
           className={isValidFilter === "false" ? styles.activeFilter : ""}
           onClick={() => {
-            setFilter("true"); // Only reviewed reports can be valid/invalid
+            setFilter("true");
             setIsValidFilter("false");
           }}
         >
@@ -150,16 +160,17 @@ const ReportsAdmin = () => {
         </button>
       </div>
 
+      {/* Loading state */}
       {loading ? (
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
           <p>Loading reports...</p>
         </div>
-      ) : reports.length === 0 ? (
+      ) : reports.length === 0 ? ( // Empty state
         <div className={styles.emptyState}>
-          <p>No reports found</p>
+          <p>No reports found matching your criteria</p>
         </div>
-      ) : (
+      ) : ( // Reports table
         <div className={styles.reportsTableContainer}>
           <div className={styles.reportsTable}>
             <table>
@@ -185,8 +196,14 @@ const ReportsAdmin = () => {
                     >
                       {report.report_text}
                     </td>
-                    <td data-label="User">{report.user_id}</td>
-                    <td data-label="Post">{report.post_id}</td>
+                    <td data-label="User">
+                      {/* Display user ID or name if available */}
+                      {report.user_id}
+                    </td>
+                    <td data-label="Post">
+                      {/* Display post ID or title if available */}
+                      {report.post_id}
+                    </td>
                     <td data-label="Status">
                       <span
                         className={`${styles.status} ${
@@ -215,6 +232,7 @@ const ReportsAdmin = () => {
                         : "—"}
                     </td>
                     <td data-label="Actions" className={styles.actions}>
+                      {/* Show validate button only for pending reports */}
                       {!report.isReviewed && (
                         <button
                           onClick={() => setSelectedReport(report)}
@@ -232,6 +250,7 @@ const ReportsAdmin = () => {
         </div>
       )}
 
+      {/* Validation modal */}
       {selectedReport && (
         <div
           className={styles.modalOverlay}
@@ -256,22 +275,16 @@ const ReportsAdmin = () => {
               </div>
 
               <div className={styles.validationSection}>
-                <h4>?Is this report valid</h4>
+                <h4>Is this report valid?</h4>
                 <div className={styles.validationButtons}>
                   <button
-                    onClick={() => {
-                      handleValidation(selectedReport.id, true);
-                      setSelectedReport(null);
-                    }}
+                    onClick={() => handleValidation(selectedReport.id, true)}
                     className={styles.validButton}
                   >
                     <FiCheck /> Yes, Valid Report
                   </button>
                   <button
-                    onClick={() => {
-                      handleValidation(selectedReport.id, false);
-                      setSelectedReport(null);
-                    }}
+                    onClick={() => handleValidation(selectedReport.id, false)}
                     className={styles.invalidButton}
                   >
                     <FiSlash /> No, Invalid Report

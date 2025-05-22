@@ -4,9 +4,9 @@ import styles from "../styles/Dashboard.module.css";
 const Dashboard = () => {
   // بيانات افتراضية فقط، لا يوجد API
   const stats = {
-    totalStudents: 1200,
-    activePosts: 456,
-    newReports: 8,
+    totalUsers: 1200,
+    Posts: 456,
+    Reports: 8,
   };
   // لازم تكون بيانات حقيقة
   return (
@@ -15,15 +15,15 @@ const Dashboard = () => {
       <div className={styles.cardsContainer}>
         <DashboardCard
           title="Total Users"
-          value={stats.totalStudents.toLocaleString()}
+          value={stats.totalUsers.toLocaleString()}
         />
         <DashboardCard
           title="Posts"
-          value={stats.activePosts.toLocaleString()}
+          value={stats.Posts.toLocaleString()}
         />
         <DashboardCard
           title="Reports"
-          value={stats.newReports.toLocaleString()}
+          value={stats.Reports.toLocaleString()}
         />
       </div>
     </div>

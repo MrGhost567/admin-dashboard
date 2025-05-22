@@ -3,7 +3,6 @@ import { FiSearch, FiUser, FiFileText } from "react-icons/fi";
 import axios from "axios";
 import styles from "../styles/Search.module.css";
 
-// Constants for student majors and staff roles to avoid hardcoding in components
 const STUDENT_MAJORS = [
   { id: 1, name: "Information Technology" },
   { id: 2, name: "Cyber Security" },
@@ -37,15 +36,9 @@ const Search = ({ isModal = false, onClose }) => {
   const [error, setError] = useState(null);
   const modalRef = useRef(null);
 
-  /**
-   * Handles the search functionality
-   * @param {Event} e - The form submission event
-   * @returns {Promise<void>}
-   */
   const handleSearch = async (e) => {
     e.preventDefault();
 
-    // Validate search query
     if (!searchQuery.trim()) {
       setError("Please enter a search term");
       return;
@@ -59,37 +52,37 @@ const Search = ({ isModal = false, onClose }) => {
         "http://localhost:8000/api/v1/admin/search/users",
         {
           params: { text: searchQuery },
-          timeout: 10000, // Increased timeout to 10 seconds
+          timeout: 10000,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
 
-      // Validate response data
-      if (!response.data || !Array.isArray(response.data)) {
-        throw new Error("Invalid response format from server");
-      }
-
-      const results = response.data;
-      const students = results.filter((user) => user.type === "student");
-      const staff = results.filter((user) => user.type === "staff");
+      // تحسين معالجة النتائج القادمة من Backend
+      const results = response.data || [];
+      
+      // تصنيف النتائج إلى طلاب وموظفين بناءً على وجود الحقول المميزة
+      const students = results.filter(user => 
+        user.hasOwnProperty('major_id') || user.hasOwnProperty('level')
+      );
+      
+      const staff = results.filter(user => 
+        user.hasOwnProperty('role_id') && !students.includes(user)
+      );
 
       setSearchResults({
         students,
         staff,
       });
 
-      // Show message if no results found
       if (students.length === 0 && staff.length === 0) {
         setError("No results found. Try different keywords.");
       }
     } catch (error) {
       let errorMessage = "An error occurred during search.";
-
-      // Handle different error scenarios
+      
       if (error.response) {
-        // Server responded with a status code outside 2xx
         if (error.response.status === 401) {
           errorMessage = "Session expired. Please log in again.";
         } else if (error.response.status === 404) {
@@ -98,75 +91,56 @@ const Search = ({ isModal = false, onClose }) => {
           errorMessage = `Server error: ${error.response.status}`;
         }
       } else if (error.request) {
-        // No response received
         if (error.code === "ECONNABORTED") {
           errorMessage = "Request timed out. Please check your connection.";
         } else {
           errorMessage = "Network error. Please check your connection.";
         }
       } else {
-        // Something happened in setting up the request
         errorMessage = error.message || "Unknown error occurred.";
       }
 
       console.error("Search error:", error);
       setError(errorMessage);
-      setSearchResults({ posts: [], students: [], staff: [] });
+      setSearchResults({ students: [], staff: [] });
     } finally {
       setIsLoading(false);
     }
   };
 
-  /**
-   * Filters and formats search results based on active tab
-   * @returns {Array} - Array of formatted results
-   */
   const getFilteredResults = () => {
-    // Return all results with proper formatting
     if (activeTab === "all") {
       return [
-        // ...searchResults.posts.map((post) => ({ ...post, type: "post" })),
-        ...searchResults.students.map((student) => ({
+        ...searchResults.students.map(student => ({
           ...student,
           type: "student",
           displayName: student.displayName || "No Name",
-          major:
-            STUDENT_MAJORS.find((m) => m.id === student.major_id)?.name ||
-            "Undefined",
+          major: STUDENT_MAJORS.find(m => m.id === student.major_id)?.name || "Undefined",
           level: student.level ?? "Undefined",
         })),
-        ...searchResults.staff.map((staff) => ({
+        ...searchResults.staff.map(staff => ({
           ...staff,
           type: "staff",
           displayName: staff.displayName || "No Name",
-          role:
-            STAFF_ROLES.find((r) => r.id === staff.role_id)?.name ||
-            "Undefined",
+          role: STAFF_ROLES.find(r => r.id === staff.role_id)?.name || "Undefined",
         })),
       ];
     }
 
-    // Return results for specific tab with proper formatting
-    return searchResults[activeTab].map((item) => ({
+    return searchResults[activeTab].map(item => ({
       ...item,
       type: activeTab.slice(0, -1),
       displayName: item.displayName || "No Name",
       ...(activeTab === "students" && {
-        major:
-          STUDENT_MAJORS.find((m) => m.id === item.major_id)?.name ||
-          "Undefined",
+        major: STUDENT_MAJORS.find(m => m.id === item.major_id)?.name || "Undefined",
         level: item.level ?? "Undefined",
       }),
       ...(activeTab === "staff" && {
-        role:
-          STAFF_ROLES.find((r) => r.id === item.role_id)?.name || "Undefined",
+        role: STAFF_ROLES.find(r => r.id === item.role_id)?.name || "Undefined",
       }),
     }));
   };
 
-  /**
-   * Effect to handle click outside modal when in modal mode
-   */
   useEffect(() => {
     if (!isModal) return;
 
@@ -203,15 +177,11 @@ const Search = ({ isModal = false, onClose }) => {
             <FiSearch className={styles.searchIcon} />
             <input
               type="text"
-              placeholder={
-                isModal
-                  ? "Search by name..."
-                  : "Search in posts, students, or staff..."
-              }
+              placeholder="Search by name..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
-                setError(null); // Clear error when user types
+                setError(null);
               }}
               className={styles.searchInput}
               autoFocus={isModal}
@@ -226,7 +196,6 @@ const Search = ({ isModal = false, onClose }) => {
           </div>
         </form>
 
-        {/* Display error message if exists */}
         {error && (
           <div className={styles.errorMessage}>
             <p>{error}</p>
@@ -235,7 +204,7 @@ const Search = ({ isModal = false, onClose }) => {
 
         {!isModal && (
           <div className={styles.tabs}>
-            {["all", "students", "staff"].map((tab) => (
+            {["all", "students", "staff"].map(tab => (
               <button
                 key={tab}
                 className={activeTab === tab ? styles.activeTab : ""}
@@ -256,37 +225,33 @@ const Search = ({ isModal = false, onClose }) => {
         )}
 
         <div className={styles.searchResults}>
-          {!isLoading &&
-            filteredResults.length === 0 &&
-            searchQuery &&
-            !error && (
-              <p className={styles.noResults}>
-                No results found for "{searchQuery}"
-              </p>
-            )}
+  {!isLoading && filteredResults.length === 0 && searchQuery && !error && (
+    <p className={styles.noResults}>
+      No results found for "{searchQuery}"
+    </p>
+  )}
 
-          {filteredResults.map((result) => (
-            <div
-              key={`${result.type}-${result.id}`}
-              className={styles.resultCard}
-            >
-              <div className={styles.resultIcon}>
-                <FiUser />
-              </div>
-              <div className={styles.resultContent}>
-                <h3>{result.displayName}</h3>
-                <p className={styles.resultType}>
-                  {result.type === "student" &&
-                    `Student • Level ${result.level}`}
-                  {result.type === "staff" && `Staff • ${result.role}`}
-                </p>
-                {result.type === "student" && result.major && (
-                  <p className={styles.resultMeta}>Major: {result.major}</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+  {filteredResults.map(result => (
+    <div key={`${result.type}-${result.id}`} className={styles.resultCard}>
+      <div className={styles.resultIcon}>
+        <FiUser />
+      </div>
+      <div className={styles.resultContent}>
+        <h3>{result.displayName}</h3>
+        <p className={styles.resultType}>
+          {result.type === "student" && `Student • Level ${result.level}`}
+          {result.type === "staff" && `Staff`}
+        </p>
+        {result.type === "student" && (
+          <p className={styles.resultMeta}>Major: {result.major}</p>
+        )}
+        {result.type === "staff" && (
+          <p className={styles.resultMeta}>Role: {result.role}</p>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
       </div>
     </div>
   );
