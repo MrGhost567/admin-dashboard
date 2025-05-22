@@ -10,33 +10,29 @@ import axios from "axios";
 import styles from "../styles/Reports.module.css";
 
 const ReportsAdmin = () => {
-  // State management for reports, loading, and error states
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // State for selected report and filters
   const [selectedReport, setSelectedReport] = useState(null);
-  const [isValidFilter, setIsValidFilter] = useState("");
-  const [filter, setFilter] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all"); // تغيير نظام الفلاتر
   
   const API_URL = "http://localhost:8000/api/v1/admin/reports";
 
-  /**
-   * Fetches reports from the backend with current filters
-   * @function fetchReports
-   * @async
-   */
   const fetchReports = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      // Prepare query parameters based on current filters
       const params = {};
-      if (filter !== "") params.isReviewed = filter;
-      if (isValidFilter !== "") params.isValid = isValidFilter;
+      
+      // تحسين نظام الفلاتر
+      switch(activeFilter) {
+        case "reviewed":
+          params.isReviewed = true;
+          break;
+        default: // all
+          break;
+      }
 
-      // Make API request
       const response = await axios.get(API_URL, {
         params,
         headers: {
@@ -44,26 +40,23 @@ const ReportsAdmin = () => {
         },
       });
 
-      // Handle different response formats (array or object with data property)
-      setReports(Array.isArray(response.data) ? response.data : response.data.data || []);
+      const data = Array.isArray(response.data) ? response.data : response.data.data || [];
+      setReports(data);
+      
+      // إظهار رسالة عندما لا توجد تقارير
+      if (data.length === 0) {
+        setError("No reports found matching your criteria");
+      }
     } catch (err) {
       console.error("Error fetching reports:", err);
       setError(err.response?.data?.message || "Failed to load reports");
     } finally {
       setLoading(false);
     }
-  }, [filter, isValidFilter]);
+  }, [activeFilter]);
 
-  /**
-   * Handles report validation (mark as valid/invalid)
-   * @function handleValidation
-   * @async
-   * @param {string} reportId - ID of the report to validate
-   * @param {boolean} isValid - Whether the report is valid
-   */
   const handleValidation = async (reportId, isValid) => {
     try {
-      // Send validation request to backend
       await axios.put(
         `${API_URL}/${reportId}`,
         {
@@ -77,7 +70,6 @@ const ReportsAdmin = () => {
         }
       );
       
-      // Refresh reports list after validation
       fetchReports();
       setSelectedReport(null);
     } catch (err) {
@@ -86,16 +78,14 @@ const ReportsAdmin = () => {
     }
   };
 
-  // Fetch reports when component mounts or filters change
   useEffect(() => {
     fetchReports();
-  }, [filter, isValidFilter, fetchReports]);
+  }, [activeFilter, fetchReports]);
 
   return (
     <div className={styles.adminContainer}>
       <h1 className={styles.pageTitle}>Reports Management</h1>
 
-      {/* Error display */}
       {error && (
         <div className={styles.errorAlert}>
           <FiAlertTriangle /> {error}
@@ -103,154 +93,100 @@ const ReportsAdmin = () => {
         </div>
       )}
 
-      {/* Filter controls */}
+      {/* تحسين واجهة الفلاتر */}
       <div className={styles.filterControls}>
         <button
-          className={
-            filter === "" && isValidFilter === "" ? styles.activeFilter : ""
-          }
-          onClick={() => {
-            setFilter("");
-            setIsValidFilter("");
-          }}
+          className={activeFilter === "all" ? styles.activeFilter : ""}
+          onClick={() => setActiveFilter("all")}
         >
           All Reports
         </button>
 
         <button
-          className={filter === "false" ? styles.activeFilter : ""}
-          onClick={() => {
-            setFilter("false");
-            setIsValidFilter("");
-          }}
-        >
-          Pending Review
-        </button>
-
-        <button
-          className={
-            filter === "true" && isValidFilter === "" ? styles.activeFilter : ""
-          }
-          onClick={() => {
-            setFilter("true");
-            setIsValidFilter("");
-          }}
+          className={activeFilter === "reviewed" ? styles.activeFilter : ""}
+          onClick={() => setActiveFilter("reviewed")}
         >
           Reviewed
         </button>
-
-        <button
-          className={isValidFilter === "true" ? styles.activeFilter : ""}
-          onClick={() => {
-            setFilter("true");
-            setIsValidFilter("true");
-          }}
-        >
-          Valid Reports
-        </button>
-
-        <button
-          className={isValidFilter === "false" ? styles.activeFilter : ""}
-          onClick={() => {
-            setFilter("true");
-            setIsValidFilter("false");
-          }}
-        >
-          Invalid Reports
-        </button>
       </div>
 
-      {/* Loading state */}
       {loading ? (
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
           <p>Loading reports...</p>
         </div>
-      ) : reports.length === 0 ? ( // Empty state
+      ) : reports.length === 0 && !error ? (
         <div className={styles.emptyState}>
-          <p>No reports found matching your criteria</p>
+          <p>No reports available</p>
         </div>
-      ) : ( // Reports table
+      ) : (
         <div className={styles.reportsTableContainer}>
-          <div className={styles.reportsTable}>
-            <table>
-              <thead>
-                <tr>
-                  <th>Report ID</th>
-                  <th>Report Details</th>
-                  <th>User</th>
-                  <th>Post</th>
-                  <th>Status</th>
-                  <th>Validity</th>
-                  <th>Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports.map((report) => (
-                  <tr key={report.id}>
-                    <td data-label="Report ID">{report.id}</td>
-                    <td
-                      data-label="Report Details"
-                      className={styles.reportText}
+          <table className={styles.reportsTable}>
+            <thead>
+              <tr>
+                <th>Report ID</th>
+                <th>Report Details</th>
+                <th>User</th>
+                <th>Post</th>
+                <th>Status</th>
+                <th>Validity</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.map((report) => (
+                <tr key={report.id}>
+                  <td data-label="Report ID">{report.id}</td>
+                  <td data-label="Report Details" className={styles.reportText}>
+                    {report.report_text}
+                  </td>
+                  <td data-label="User">{report.user_id}</td>
+                  <td data-label="Post">{report.post_id}</td>
+                  <td data-label="Status">
+                    <span
+                      className={`${styles.status} ${
+                        report.isReviewed ? styles.reviewed : styles.pending
+                      }`}
                     >
-                      {report.report_text}
-                    </td>
-                    <td data-label="User">
-                      {/* Display user ID or name if available */}
-                      {report.user_id}
-                    </td>
-                    <td data-label="Post">
-                      {/* Display post ID or title if available */}
-                      {report.post_id}
-                    </td>
-                    <td data-label="Status">
+                      {report.isReviewed ? "Reviewed" : "Pending"}
+                    </span>
+                  </td>
+                  <td data-label="Validity">
+                    {report.isReviewed ? (
                       <span
-                        className={`${styles.status} ${
-                          report.isReviewed ? styles.reviewed : styles.pending
+                        className={`${styles.validity} ${
+                          report.isValid ? styles.valid : styles.invalid
                         }`}
                       >
-                        {report.isReviewed ? "Reviewed" : "Pending"}
+                        {report.isValid ? "Valid" : "Invalid"}
                       </span>
-                    </td>
-                    <td data-label="Validity">
-                      {report.isReviewed ? (
-                        <span
-                          className={`${styles.validity} ${
-                            report.isValid ? styles.valid : styles.invalid
-                          }`}
-                        >
-                          {report.isValid ? "Valid" : "Invalid"}
-                        </span>
-                      ) : (
-                        <span className={styles.notReviewed}>Not Reviewed</span>
-                      )}
-                    </td>
-                    <td data-label="Date">
-                      {report.created_at
-                        ? new Date(report.created_at).toLocaleDateString()
-                        : "—"}
-                    </td>
-                    <td data-label="Actions" className={styles.actions}>
-                      {/* Show validate button only for pending reports */}
-                      {!report.isReviewed && (
-                        <button
-                          onClick={() => setSelectedReport(report)}
-                          className={styles.validateButton}
-                        >
-                          <FiCheckCircle /> Validate
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    ) : (
+                      <span className={styles.notReviewed}>Not Reviewed</span>
+                    )}
+                  </td>
+                  <td data-label="Date">
+                    {report.created_at
+                      ? new Date(report.created_at).toLocaleDateString()
+                      : "—"}
+                  </td>
+                  <td data-label="Actions" className={styles.actions}>
+                    {!report.isReviewed && (
+                      <button
+                        onClick={() => setSelectedReport(report)}
+                        className={styles.validateButton}
+                      >
+                        <FiCheckCircle /> Validate
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
-      {/* Validation modal */}
       {selectedReport && (
         <div
           className={styles.modalOverlay}
