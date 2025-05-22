@@ -1,27 +1,28 @@
 // src/pages/Login.jsx
-import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Auth } from "../services/api";
-import styles from "../styles/Login.module.css";
+import React, { useState } from 'react';
+// to handle routing
+import { useNavigate } from 'react-router-dom';
+import { Auth } from '../services/api';
+import styles from '../styles/Login.module.css';
 
 const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showResetForm, setShowResetForm] = useState(false);
   const [resetData, setResetData] = useState({
-    accountNumber: "",
-    newPassword: "",
-    confirmPassword: "",
+    accountNumber: '',
+    newPassword: '',
+    confirmPassword: '',
   });
-  const [resetError, setResetError] = useState("");
-  const [resetSuccess, setResetSuccess] = useState("");
+  const [resetError, setResetError] = useState('');
+  const [resetSuccess, setResetSuccess] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
 
+  // Used to refresh the form status for account number and password
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
@@ -30,6 +31,7 @@ const Login = ({ setUser }) => {
     }));
   };
 
+  // Used to refresh the form status for Reset password
   const handleResetInputChange = (e) => {
     const { id, value } = e.target;
     setResetData((prev) => ({
@@ -38,15 +40,16 @@ const Login = ({ setUser }) => {
     }));
   };
 
+  // used to send info to the api, use the Auth function
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.username.trim() || !formData.password.trim()) {
-      setError("Account number and password are required");
+      setError('Account number and password are required');
       return;
     }
 
-    setError("");
+    setError('');
     setIsLoading(true);
 
     try {
@@ -56,22 +59,21 @@ const Login = ({ setUser }) => {
       });
 
       if (!user) {
-        throw new Error("No user data returned");
+        throw new Error('No user data returned');
       }
 
       setUser(user);
-      const from = location.state?.from?.pathname || "/dashboard";
-      navigate(from, { replace: true });
+      navigate('/dashboard', { replace: true }); // always route to dashboard
     } catch (err) {
-      let errorMessage = "Authentication failed. Please try again.";
+      let errorMessage = 'Authentication failed. Please try again.';
 
       if (err.response) {
         if (err.response.status === 422) {
           errorMessage = Object.entries(err.response.data.errors)
-            .map(([field, errors]) => `${field}: ${errors.join(", ")}`)
-            .join("\n");
+            .map(([field, errors]) => `${field}: ${errors.join(', ')}`)
+            .join('\n');
         } else if (err.response.status === 401) {
-          errorMessage = "Invalid Account number or password";
+          errorMessage = 'Invalid Account number or password';
         } else if (err.response.data?.message) {
           errorMessage = err.response.data.message;
         }
@@ -80,36 +82,37 @@ const Login = ({ setUser }) => {
       }
 
       setError(errorMessage);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
     } finally {
       setIsLoading(false);
     }
   };
 
+  // used to handle reset password
   const handlePasswordReset = async (e) => {
     e.preventDefault();
-    setResetError("");
-    setResetSuccess("");
+    setResetError('');
+    setResetSuccess('');
 
     // Validate reset form
     if (!resetData.accountNumber.trim()) {
-      setResetError("Account number is required");
+      setResetError('Account number is required');
       return;
     }
 
     if (!resetData.newPassword || !resetData.confirmPassword) {
-      setResetError("Both password fields are required");
+      setResetError('Both password fields are required');
       return;
     }
 
     if (resetData.newPassword.length < 8) {
-      setResetError("Password must be at least 8 characters long");
+      setResetError('Password must be at least 8 characters long');
       return;
     }
 
     if (resetData.newPassword !== resetData.confirmPassword) {
-      setResetError("Passwords do not match");
+      setResetError('Passwords do not match');
       return;
     }
 
@@ -123,24 +126,24 @@ const Login = ({ setUser }) => {
       });
 
       if (response.success) {
-        setResetSuccess("Your password has been changed successfully");
+        setResetSuccess('Your password has been changed successfully');
         setResetData({
-          accountNumber: "",
-          newPassword: "",
-          confirmPassword: "",
+          accountNumber: '',
+          newPassword: '',
+          confirmPassword: '',
         });
         setTimeout(() => {
           setShowResetForm(false);
-          setResetSuccess("");
+          setResetSuccess('');
         }, 3000);
       } else {
-        setResetError(response.message || "Failed to reset password");
+        setResetError(response.message || 'Failed to reset password');
       }
     } catch (err) {
-      let errorMessage = "Password reset failed. Please try again.";
+      let errorMessage = 'Password reset failed. Please try again.';
       if (err.response) {
         if (err.response.status === 401) {
-          errorMessage = "Invalid account number";
+          errorMessage = 'Invalid account number';
         } else if (err.response.data?.message) {
           errorMessage = err.response.data.message;
         }
@@ -151,6 +154,7 @@ const Login = ({ setUser }) => {
     }
   };
 
+  // display the login form
   return (
     <div className={styles.loginContainer}>
       {!showResetForm ? (
@@ -159,7 +163,7 @@ const Login = ({ setUser }) => {
 
           {error && (
             <div className={styles.error}>
-              {error.split("\n").map((line, i) => (
+              {error.split('\n').map((line, i) => (
                 <p key={i}>{line}</p>
               ))}
             </div>
@@ -199,12 +203,12 @@ const Login = ({ setUser }) => {
             className={styles.loginButton}
             disabled={isLoading}
             aria-busy={isLoading}
-            aria-label={isLoading ? "Logging in..." : "Login"}
+            aria-label={isLoading ? 'Logging in...' : 'Login'}
           >
             {isLoading ? (
               <span className={styles.spinner} aria-hidden="true"></span>
             ) : (
-              "Login"
+              'Login'
             )}
           </button>
 
@@ -273,7 +277,7 @@ const Login = ({ setUser }) => {
             {isLoading ? (
               <span className={styles.spinner} aria-hidden="true"></span>
             ) : (
-              "Reset Password"
+              'Reset Password'
             )}
           </button>
 
@@ -282,8 +286,8 @@ const Login = ({ setUser }) => {
             className={styles.toggleButton}
             onClick={() => {
               setShowResetForm(false);
-              setResetError("");
-              setResetSuccess("");
+              setResetError('');
+              setResetSuccess('');
             }}
             disabled={isLoading}
           >

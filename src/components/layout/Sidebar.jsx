@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Auth } from "../../services/api";
-import styles from "../../styles/Sidebar.module.css";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Auth } from '../../services/api';
+import styles from '../../styles/Sidebar.module.css';
 import {
   FiHome,
   FiUsers,
@@ -10,7 +10,7 @@ import {
   FiLogOut,
   FiChevronLeft,
   FiChevronRight,
-} from "react-icons/fi";
+} from 'react-icons/fi';
 
 const Sidebar = ({ setUser = () => {}, onToggleCollapse }) => {
   const navigate = useNavigate();
@@ -19,52 +19,55 @@ const Sidebar = ({ setUser = () => {}, onToggleCollapse }) => {
 
   // Memoize handleResize to avoid unnecessary re-renders
   const handleResize = useCallback(() => {
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
     setIsCollapsed(isMobile);
     if (onToggleCollapse) onToggleCollapse(isMobile);
   }, [onToggleCollapse]);
 
   useEffect(() => {
     handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [handleResize]);
 
+  // Logout function
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
       await Auth.logout();
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
 
-      if (typeof setUser === "function") {
+      if (typeof setUser === 'function') {
         setUser(null);
       }
 
-      navigate("/login", { replace: true });
+      navigate('/login', { replace: true });
     } catch (error) {
-      console.error("Logout failed:", error);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      console.error('Logout failed:', error);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
 
-      if (typeof setUser === "function") {
+      if (typeof setUser === 'function') {
         setUser(null);
       }
 
-      navigate("/login", { replace: true });
+      navigate('/login', { replace: true });
     } finally {
       setIsLoggingOut(false);
     }
   };
 
+  // sidebar min/max
   const toggleSidebar = () => {
     const newCollapsedState = !isCollapsed;
     setIsCollapsed(newCollapsedState);
     if (onToggleCollapse) onToggleCollapse(newCollapsedState);
   };
 
+  // Sidebar form display
   return (
-    <nav className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""}`}>
+    <nav className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
       <div className={styles.logo}>
         {isCollapsed ? <span>UST</span> : <span>UST Community Admin</span>}
       </div>
@@ -113,7 +116,7 @@ const Sidebar = ({ setUser = () => {}, onToggleCollapse }) => {
         >
           <FiLogOut className={styles.icon} />
           {!isCollapsed && (
-            <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+            <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
           )}
         </button>
       </div>
