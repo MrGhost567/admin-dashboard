@@ -521,7 +521,7 @@ const Users = ({ isSidebarCollapsed }) => {
                         className={errors.level ? styles.errorInput : ""}
                       >
                         <option value="">Select Level</option>
-                        {[1, 2, 3, 4].map((level) => (
+                        {[1, 2, 3, 4, 5].map((level) => (
                           <option key={level} value={level}>
                             Level {level}
                           </option>
