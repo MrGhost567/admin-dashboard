@@ -50,8 +50,8 @@ const Users = ({ isSidebarCollapsed }) => {
     displayName: '',
     name: '',
     password: '',
-    user_type_id: '1',
-    branch: 'Hadhramaut',
+    user_type_id: '',
+    branch: '',
     major_id: '',
     level: '',
     role_id: '',
@@ -461,6 +461,7 @@ const Users = ({ isSidebarCollapsed }) => {
                     onChange={handleAddFormChange}
                     className={errors.branch ? styles.errorInput : ''}
                   >
+                    <option value="">Select Branch</option>
                     {BRANCHES.map((branch) => (
                       <option key={branch} value={branch}>
                         {branch}
@@ -480,10 +481,15 @@ const Users = ({ isSidebarCollapsed }) => {
                     name="user_type_id"
                     value={addFormData.user_type_id}
                     onChange={handleAddFormChange}
+                    className={errors.user_type_id ? styles.errorInput : ''}
                   >
+                    <option value="">Select User Type</option>
                     <option value="1">Student</option>
                     <option value="2">Staff</option>
                   </select>
+                  {errors.user_type_id && (
+                    <span className={styles.error}>{errors.user_type_id}</span>
+                  )}
                 </div>
 
                 {addFormData.user_type_id === '1' ? (
