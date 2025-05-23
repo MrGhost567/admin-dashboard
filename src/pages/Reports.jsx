@@ -1,32 +1,32 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import {
   FiCheckCircle,
   FiAlertTriangle,
   FiX,
   FiCheck,
   FiSlash,
-} from "react-icons/fi";
-import axios from "axios";
-import styles from "../styles/Reports.module.css";
+} from 'react-icons/fi';
+import axios from 'axios';
+import styles from '../styles/Reports.module.css';
 
 const ReportsAdmin = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedReport, setSelectedReport] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("all"); // تغيير نظام الفلاتر
-  
-  const API_URL = "http://localhost:8000/api/v1/admin/reports";
+  const [activeFilter, setActiveFilter] = useState('all'); // تغيير نظام الفلاتر
+
+  const API_URL = 'http://localhost:8000/api/v1/admin/reports';
 
   const fetchReports = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const params = {};
-      
+
       // تحسين نظام الفلاتر
-      switch(activeFilter) {
-        case "reviewed":
+      switch (activeFilter) {
+        case 'reviewed':
           params.isReviewed = true;
           break;
         default: // all
@@ -36,20 +36,22 @@ const ReportsAdmin = () => {
       const response = await axios.get(API_URL, {
         params,
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         },
       });
 
-      const data = Array.isArray(response.data) ? response.data : response.data.data || [];
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data.data || [];
       setReports(data);
-      
+
       // إظهار رسالة عندما لا توجد تقارير
       if (data.length === 0) {
-        setError("No reports found matching your criteria");
+        setError('No reports found matching your criteria');
       }
     } catch (err) {
-      console.error("Error fetching reports:", err);
-      setError(err.response?.data?.message || "Failed to load reports");
+      console.error('Error fetching reports:', err);
+      setError(err.response?.data?.message || 'Failed to load reports');
     } finally {
       setLoading(false);
     }
@@ -65,16 +67,16 @@ const ReportsAdmin = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
           },
         }
       );
-      
+
       fetchReports();
       setSelectedReport(null);
     } catch (err) {
-      console.error("Error validating report:", err);
-      setError(err.response?.data?.message || "Failed to validate report");
+      console.error('Error validating report:', err);
+      setError(err.response?.data?.message || 'Failed to validate report');
     }
   };
 
@@ -96,15 +98,15 @@ const ReportsAdmin = () => {
       {/* تحسين واجهة الفلاتر */}
       <div className={styles.filterControls}>
         <button
-          className={activeFilter === "all" ? styles.activeFilter : ""}
-          onClick={() => setActiveFilter("all")}
+          className={activeFilter === 'all' ? styles.activeFilter : ''}
+          onClick={() => setActiveFilter('all')}
         >
           All Reports
         </button>
 
         <button
-          className={activeFilter === "reviewed" ? styles.activeFilter : ""}
-          onClick={() => setActiveFilter("reviewed")}
+          className={activeFilter === 'reviewed' ? styles.activeFilter : ''}
+          onClick={() => setActiveFilter('reviewed')}
         >
           Reviewed
         </button>
@@ -149,7 +151,7 @@ const ReportsAdmin = () => {
                         report.isReviewed ? styles.reviewed : styles.pending
                       }`}
                     >
-                      {report.isReviewed ? "Reviewed" : "Pending"}
+                      {report.isReviewed ? 'Reviewed' : 'Pending'}
                     </span>
                   </td>
                   <td data-label="Validity">
@@ -159,7 +161,7 @@ const ReportsAdmin = () => {
                           report.isValid ? styles.valid : styles.invalid
                         }`}
                       >
-                        {report.isValid ? "Valid" : "Invalid"}
+                        {report.isValid ? 'Valid' : 'Invalid'}
                       </span>
                     ) : (
                       <span className={styles.notReviewed}>Not Reviewed</span>
@@ -168,7 +170,7 @@ const ReportsAdmin = () => {
                   <td data-label="Date">
                     {report.created_at
                       ? new Date(report.created_at).toLocaleDateString()
-                      : "—"}
+                      : '—'}
                   </td>
                   <td data-label="Actions" className={styles.actions}>
                     {!report.isReviewed && (
@@ -204,14 +206,14 @@ const ReportsAdmin = () => {
             </div>
             <div className={styles.modalContent}>
               <div className={styles.reportPreview}>
-                <h4>Report Content:</h4>
+                <h4>:Report Content</h4>
                 <div className={styles.reportText}>
                   {selectedReport.report_text}
                 </div>
               </div>
 
               <div className={styles.validationSection}>
-                <h4>Is this report valid?</h4>
+                <h4>?Is this report valid</h4>
                 <div className={styles.validationButtons}>
                   <button
                     onClick={() => handleValidation(selectedReport.id, true)}

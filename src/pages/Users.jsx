@@ -1,34 +1,34 @@
-import { useState, useEffect, useCallback } from "react";
-import styles from "../styles/Users.module.css";
+import { useState, useEffect, useCallback } from 'react';
+import styles from '../styles/Users.module.css';
 // icons used
-import { FiEdit, FiTrash2, FiUserPlus, FiX, FiCheck } from "react-icons/fi";
-import axios from "axios";
+import { FiEdit, FiTrash2, FiUserPlus, FiX, FiCheck } from 'react-icons/fi';
+import axios from 'axios';
 
 const Users = ({ isSidebarCollapsed }) => {
   // Majors
   const STUDENT_MAJORS = [
-    { id: 1, name: "Information Technology" },
-    { id: 2, name: "Cyber Security" },
-    { id: 3, name: "Architecture" },
-    { id: 4, name: "Business Management" },
-    { id: 5, name: "Accounting" },
-    { id: 6, name: "Pharmacy" },
-    { id: 7, name: "Therapeutic Nutrition" },
+    { id: 1, name: 'Information Technology' },
+    { id: 2, name: 'Cyber Security' },
+    { id: 3, name: 'Architecture' },
+    { id: 4, name: 'Business Management' },
+    { id: 5, name: 'Accounting' },
+    { id: 6, name: 'Pharmacy' },
+    { id: 7, name: 'Therapeutic Nutrition' },
   ];
 
-  const BRANCHES = ["Hadhramaut"];
+  const BRANCHES = ['Hadhramaut'];
 
   // Staff Roles
   const STAFF_ROLES = [
-    { id: 1, name: "Lecturer" },
-    { id: 2, name: "Head of department" },
-    { id: 3, name: "Accountant" },
-    { id: 4, name: "Student Affairs" },
-    { id: 5, name: "Public Relations" },
-    { id: 6, name: "Secretary" },
-    { id: 7, name: "Branch Manager" },
-    { id: 8, name: "Deputy Branch Manager" },
-    { id: 9, name: "Admission and Registration" },
+    { id: 1, name: 'Lecturer' },
+    { id: 2, name: 'Head of department' },
+    { id: 3, name: 'Accountant' },
+    { id: 4, name: 'Student Affairs' },
+    { id: 5, name: 'Public Relations' },
+    { id: 6, name: 'Secretary' },
+    { id: 7, name: 'Branch Manager' },
+    { id: 8, name: 'Deputy Branch Manager' },
+    { id: 9, name: 'Admission and Registration' },
   ];
 
   // State of Users
@@ -46,20 +46,20 @@ const Users = ({ isSidebarCollapsed }) => {
 
   // Add Form Variable
   const initialAddForm = {
-    username: "",
-    displayName: "",
-    name: "",
-    password: "",
-    user_type_id: "1",
-    branch: "Hadhramaut",
-    major_id: "",
-    level: "",
-    role_id: "",
+    username: '',
+    displayName: '',
+    name: '',
+    password: '',
+    user_type_id: '1',
+    branch: 'Hadhramaut',
+    major_id: '',
+    level: '',
+    role_id: '',
   };
 
   // Edit form Variable
   const initialEditForm = {
-    password: "",
+    password: '',
     isAdmin: 0,
   };
 
@@ -69,11 +69,11 @@ const Users = ({ isSidebarCollapsed }) => {
 
   // Token function
   const getAuthHeader = () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     return {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       withCredentials: true,
     };
@@ -84,13 +84,13 @@ const Users = ({ isSidebarCollapsed }) => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        "http://localhost:8000/api/v1/admin/users",
+        'http://localhost:8000/api/v1/admin/users',
         getAuthHeader()
       );
       setUsers(response.data);
     } catch (error) {
-      console.error("Failed to fetch users:", error);
-      setApiError("Failed to fetch users. Please try again.");
+      console.error('Failed to fetch users:', error);
+      setApiError('Failed to fetch users. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -116,45 +116,45 @@ const Users = ({ isSidebarCollapsed }) => {
 
     // Account number Validations
     if (!username.trim()) {
-      errors.username = "Account number is required";
+      errors.username = 'Account number is required';
     } else if (!/^\d+$/.test(username)) {
       errors.username =
-        "Account number must contain numbers only (no letters or symbols)";
+        'Account number must contain numbers only (no letters or symbols)';
     } else if (username.length < 8) {
-      errors.username = "Account number must be at least 8 digits";
+      errors.username = 'Account number must be at least 8 digits';
     } else if (username.length > 12) {
-      errors.username = "Account number must not exceed 12 digits";
+      errors.username = 'Account number must not exceed 12 digits';
     }
 
     // Display Name Validations
     if (!displayName.trim()) {
-      errors.displayName = "Display name is required";
+      errors.displayName = 'Display name is required';
     } else if (/^\d+$/.test(displayName)) {
-      errors.displayName = "Display name must not contain only numbers";
+      errors.displayName = 'Display name must not contain only numbers';
     } else if (/[!@#$%^&*()\-_=+{}[\]|;:'",.<>?/`~]/.test(displayName)) {
-      errors.displayName = "Display name must not contain symbols";
-    } else if (displayName.length < 5) {
-      errors.displayName = "Display name must be at least 5 characters";
+      errors.displayName = 'Display name must not contain symbols';
+    } else if (displayName.length < 3) {
+      errors.displayName = 'Display name must be at least 3 characters';
     }
 
     // Password Validation
     if (!password) {
-      errors.password = "Password is required";
+      errors.password = 'Password is required';
     } else if (password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
+      errors.password = 'Password must be at least 8 characters';
     }
 
     // Branch Validation
     if (!branch) {
-      errors.branch = "Branch is required";
+      errors.branch = 'Branch is required';
     }
 
     // Validation Based on User Type
-    if (user_type_id === "1") {
-      if (!major_id) errors.major_id = "Major is required";
-      if (!level) errors.level = "Level is required";
+    if (user_type_id === '1') {
+      if (!major_id) errors.major_id = 'Major is required';
+      if (!level) errors.level = 'Level is required';
     } else {
-      if (!role_id) errors.role_id = "Role is required";
+      if (!role_id) errors.role_id = 'Role is required';
     }
 
     return errors;
@@ -171,9 +171,9 @@ const Users = ({ isSidebarCollapsed }) => {
 
     try {
       const endpoint =
-        addFormData.user_type_id === "1"
-          ? "api/v1/admin/register/student"
-          : "api/v1/admin/register/staff";
+        addFormData.user_type_id === '1'
+          ? 'api/v1/admin/register/student'
+          : 'api/v1/admin/register/staff';
 
       // Payload functions
       const payload = {
@@ -183,7 +183,7 @@ const Users = ({ isSidebarCollapsed }) => {
         branch: addFormData.branch,
       };
 
-      if (addFormData.user_type_id === "1") {
+      if (addFormData.user_type_id === '1') {
         payload.major_id = addFormData.major_id;
         payload.level = addFormData.level;
       } else {
@@ -197,7 +197,7 @@ const Users = ({ isSidebarCollapsed }) => {
       );
 
       // Success Message of adding new user
-      setSuccessMessage("User added successfully!");
+      setSuccessMessage('User added successfully!');
       await fetchUsers();
       setShowAddForm(false);
       setAddFormData(initialAddForm);
@@ -207,7 +207,7 @@ const Users = ({ isSidebarCollapsed }) => {
 
       // لو السيرفر رجع رسالة عامة
       if (data.message && !data.errors) {
-        if (data.message.toLowerCase().includes("exists")) {
+        if (data.message.toLowerCase().includes('exists')) {
           serverErrors.username = [data.message];
         } else {
           setApiError(data.message);
@@ -215,7 +215,7 @@ const Users = ({ isSidebarCollapsed }) => {
       }
 
       setErrors(serverErrors);
-      if (Object.keys(serverErrors).length > 0) setApiError("");
+      if (Object.keys(serverErrors).length > 0) setApiError('');
     }
   };
 
@@ -226,17 +226,17 @@ const Users = ({ isSidebarCollapsed }) => {
 
     // Username is required
     if (!username.trim()) {
-      errors.username = "Account number is required";
+      errors.username = 'Account number is required';
     } else if (!/^\d+$/.test(username)) {
       errors.username =
-        "Account number must contain numbers only (no letters or symbols)";
+        'Account number must contain numbers only (no letters or symbols)';
     } else if (username.length > 12) {
-      errors.username = "Account number must not exceed 12 digits";
+      errors.username = 'Account number must not exceed 12 digits';
     }
 
     // Password is optional but if present, must be valid
     if (password && password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
+      errors.password = 'Password must be at least 8 characters';
     }
 
     return errors;
@@ -270,13 +270,13 @@ const Users = ({ isSidebarCollapsed }) => {
         getAuthHeader()
       );
 
-      setSuccessMessage("User updated successfully!");
+      setSuccessMessage('User updated successfully!');
       await fetchUsers();
       setShowEditForm(false);
     } catch (error) {
       const serverErrors = error.response?.data?.errors || {};
       setErrors(serverErrors);
-      setApiError(error.response?.data?.message || "Failed to update user");
+      setApiError(error.response?.data?.message || 'Failed to update user');
     }
   };
 
@@ -286,7 +286,7 @@ const Users = ({ isSidebarCollapsed }) => {
       username: user.username.toString(), // When loading data change user to string
       user_type_id: user.user_type_id.toString(),
       isAdmin: user.isAdmin || 0,
-      password: "",
+      password: '',
     });
     setEditId(user.id);
     setShowEditForm(true);
@@ -299,18 +299,18 @@ const Users = ({ isSidebarCollapsed }) => {
         `http://localhost:8000/api/v1/admin/users/${userToDelete}`,
         getAuthHeader()
       );
-      setSuccessMessage("User deleted successfully!");
+      setSuccessMessage('User deleted successfully!');
       await fetchUsers();
       setShowDeleteModal(false);
     } catch (error) {
-      console.error("Failed to delete user:", error);
-      setApiError("Failed to delete user. Please try again.");
+      console.error('Failed to delete user:', error);
+      setApiError('Failed to delete user. Please try again.');
     }
   };
 
   // Display table
   const getUserType = (user_type_id) => {
-    return user_type_id === 1 ? "Student" : "Staff";
+    return user_type_id === 1 ? 'Student' : 'Staff';
   };
 
   const formatDate = (dateString) => {
@@ -321,19 +321,19 @@ const Users = ({ isSidebarCollapsed }) => {
   const handleAddFormChange = (e) => {
     const { name, value } = e.target;
     setAddFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleEditFormChange = (e) => {
     const { name, value } = e.target;
     setEditFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   return (
     <div
       className={`${styles.container} ${
-        isSidebarCollapsed ? styles.sidebarCollapsed : ""
+        isSidebarCollapsed ? styles.sidebarCollapsed : ''
       }`}
     >
       {/* Modal of deleting user */}
@@ -393,14 +393,14 @@ const Users = ({ isSidebarCollapsed }) => {
         <div className={styles.modalOverlay}>
           <div
             className={styles.modal}
-            style={{ maxHeight: "90vh", overflowY: "auto" }}
+            style={{ maxHeight: '90vh', overflowY: 'auto' }}
           >
             <h2>New User</h2>
             <form onSubmit={handleAddSubmit}>
-              <div style={{ padding: "0 15px" }}>
+              <div style={{ padding: '0 15px' }}>
                 <div className={styles.formGroup}>
                   <label>
-                    Account number <span style={{ color: "red" }}>*</span>
+                    Account number <span style={{ color: 'red' }}>*</span>
                   </label>
 
                   <input
@@ -408,7 +408,7 @@ const Users = ({ isSidebarCollapsed }) => {
                     name="username"
                     value={addFormData.username}
                     onChange={handleAddFormChange}
-                    className={errors.username ? styles.errorInput : ""}
+                    className={errors.username ? styles.errorInput : ''}
                   />
                   {errors.username && (
                     <span className={styles.error}>
@@ -421,14 +421,14 @@ const Users = ({ isSidebarCollapsed }) => {
 
                 <div className={styles.formGroup}>
                   <label>
-                    Display Name <span style={{ color: "red" }}>*</span>
+                    Display Name <span style={{ color: 'red' }}>*</span>
                   </label>
                   <input
                     type="text"
                     name="displayName"
                     value={addFormData.displayName}
                     onChange={handleAddFormChange}
-                    className={errors.displayName ? styles.errorInput : ""}
+                    className={errors.displayName ? styles.errorInput : ''}
                   />
                   {errors.displayName && (
                     <span className={styles.error}>{errors.displayName}</span>
@@ -437,14 +437,14 @@ const Users = ({ isSidebarCollapsed }) => {
 
                 <div className={styles.formGroup}>
                   <label>
-                    Password <span style={{ color: "red" }}>*</span>
+                    Password <span style={{ color: 'red' }}>*</span>
                   </label>
                   <input
                     type="password"
                     name="password"
                     value={addFormData.password}
                     onChange={handleAddFormChange}
-                    className={errors.password ? styles.errorInput : ""}
+                    className={errors.password ? styles.errorInput : ''}
                   />
                   {errors.password && (
                     <span className={styles.error}>{errors.password}</span>
@@ -453,13 +453,13 @@ const Users = ({ isSidebarCollapsed }) => {
 
                 <div className={styles.formGroup}>
                   <label>
-                    Branch <span style={{ color: "red" }}>*</span>
+                    Branch <span style={{ color: 'red' }}>*</span>
                   </label>
                   <select
                     name="branch"
                     value={addFormData.branch}
                     onChange={handleAddFormChange}
-                    className={errors.branch ? styles.errorInput : ""}
+                    className={errors.branch ? styles.errorInput : ''}
                   >
                     {BRANCHES.map((branch) => (
                       <option key={branch} value={branch}>
@@ -474,7 +474,7 @@ const Users = ({ isSidebarCollapsed }) => {
 
                 <div className={styles.formGroup}>
                   <label>
-                    User Type <span style={{ color: "red" }}>*</span>
+                    User Type <span style={{ color: 'red' }}>*</span>
                   </label>
                   <select
                     name="user_type_id"
@@ -486,17 +486,17 @@ const Users = ({ isSidebarCollapsed }) => {
                   </select>
                 </div>
 
-                {addFormData.user_type_id === "1" ? (
+                {addFormData.user_type_id === '1' ? (
                   <>
                     <div className={styles.formGroup}>
                       <label>
-                        Major <span style={{ color: "red" }}>*</span>
+                        Major <span style={{ color: 'red' }}>*</span>
                       </label>
                       <select
                         name="major_id"
                         value={addFormData.major_id}
                         onChange={handleAddFormChange}
-                        className={errors.major_id ? styles.errorInput : ""}
+                        className={errors.major_id ? styles.errorInput : ''}
                       >
                         <option value="">Select Major</option>
                         {STUDENT_MAJORS.map((major) => (
@@ -512,13 +512,13 @@ const Users = ({ isSidebarCollapsed }) => {
 
                     <div className={styles.formGroup}>
                       <label>
-                        Level <span style={{ color: "red" }}>*</span>
+                        Level <span style={{ color: 'red' }}>*</span>
                       </label>
                       <select
                         name="level"
                         value={addFormData.level}
                         onChange={handleAddFormChange}
-                        className={errors.level ? styles.errorInput : ""}
+                        className={errors.level ? styles.errorInput : ''}
                       >
                         <option value="">Select Level</option>
                         {[1, 2, 3, 4, 5].map((level) => (
@@ -535,13 +535,13 @@ const Users = ({ isSidebarCollapsed }) => {
                 ) : (
                   <div className={styles.formGroup}>
                     <label>
-                      Role <span style={{ color: "red" }}>*</span>
+                      Role <span style={{ color: 'red' }}>*</span>
                     </label>
                     <select
                       name="role_id"
                       value={addFormData.role_id}
                       onChange={handleAddFormChange}
-                      className={errors.role_id ? styles.errorInput : ""}
+                      className={errors.role_id ? styles.errorInput : ''}
                     >
                       <option value="">Select Role</option>
                       {STAFF_ROLES.map((role) => (
@@ -584,7 +584,7 @@ const Users = ({ isSidebarCollapsed }) => {
           <div className={styles.modal}>
             <h2>Edit User</h2>
             <form onSubmit={handleEditSubmit}>
-              <div style={{ padding: "0 15px" }}>
+              <div style={{ padding: '0 15px' }}>
                 <div className={styles.formGroup}>
                   <label>Account number</label>
                   <input
@@ -598,7 +598,7 @@ const Users = ({ isSidebarCollapsed }) => {
                       setEditFormData((prev) => ({
                         ...prev,
                         username:
-                          typeof value === "number" ? value.toString() : value,
+                          typeof value === 'number' ? value.toString() : value,
                       }));
                     }}
                   />
@@ -677,8 +677,8 @@ const Users = ({ isSidebarCollapsed }) => {
                   <td data-label="ID">{user.id}</td>
                   <td data-label="Username">{user.username}</td>
                   <td data-label="Display Name">
-                    {user.display_name || "-"}
-                  </td>{" "}
+                    {user.display_name || '-'}
+                  </td>{' '}
                   <td data-label="User Type">
                     {getUserType(user.user_type_id)}
                   </td>
